@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, UserData
+from .models import Category, Product, UserData, Clicks
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -13,8 +13,12 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'title']
 
-class UserSerializer(serializers.ModelSerializer):
+class ClickSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Clicks
+        fields = ['first_name', 'number']
 
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserData
         fields = ["id", "email", "name", "password"]
@@ -26,3 +30,4 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+    

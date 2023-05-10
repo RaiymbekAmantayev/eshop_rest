@@ -1,8 +1,8 @@
 from django.forms import ValidationError
 from rest_framework import viewsets, filters
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Category, Product, WishList
-from .serializers import CategorySerializer, ProductSerializer, UserSerializer
+from .models import Category, Product, WishList, Clicks
+from .serializers import CategorySerializer, ProductSerializer, UserSerializer, ClickSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
@@ -18,6 +18,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     }
 
 
+
+
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -29,9 +31,22 @@ class ProductViewSet(viewsets.ModelViewSet):
         'title': ['exact'],
         'category': ['exact']
     }
-    ordering_fields = ['title', 'price']
+    ordering_fields = ['id','title', 'price', 'created_at' ]
     ordering = ['title']
     search_fields = ['title']
+
+class LastFive(viewsets.ModelViewSet):
+    queryset = Product.objects.order_by('-created_at')[:5]
+    serializer_class = ProductSerializer
+
+class Sale(viewsets.ModelViewSet):
+    queryset = Product.objects.order_by('price')[:5]
+    serializer_class = ProductSerializer
+
+class ClicksView(viewsets.ModelViewSet):
+    queryset =Clicks.objects.all()
+    serializer_class=ClickSerializer
+
 
 class RegisterView(APIView):
     def post(self, request):
@@ -67,3 +82,4 @@ class WishListView(APIView):
         wish_list = WishList.objects.get(user=self.request.user)
         wish_list.product.remove(product_id)
         return Response({'status': 'success'})
+    

@@ -70,7 +70,6 @@ class UserManager(BaseUserManager):
 
 
 class UserData(AbstractUser):
-
     username = None
     name = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100, unique=True)
@@ -96,3 +95,11 @@ class WishList(Model):
 
     class Meta:
         verbose_name_plural = 'WishLists'
+
+
+class Clicks(Model):
+    first_name = models.CharField(max_length=255)
+    number = models.BigIntegerField()
+
+    class Meta:
+        verbose_name_plural = "Заявки"
